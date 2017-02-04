@@ -31,6 +31,8 @@ LED_PIN     = 23;
 // ---------------------------------------------------------------------------------------------------------
 // Eddystone / GATT FLip flop
 
+//TEST my change
+
 var BEACON_ADV_STATE = 0;
 var GATT_ADV_STATE = 1;
 
