@@ -1,0 +1,21 @@
+{
+    "name": "rpi-ble-gpio-server",
+    "version": "0.0.1",
+    "description": "Make the Pi appear as a Bluetooth LE Peripheral for remote control of GPIO",
+    "main": "main.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/robertpinson/RPI_BLE_GPIO_SERVER"
+    },
+    "dependencies": {
+        "eddystone-beacon": "^1.0.6",
+        "onoff": "^1.0.4",
+        "winston": "^2.2.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "./start.sh"
+    },
+    "author": "https://www.robertpinson.co.uk/",
+    "license": "MIT"
+}
