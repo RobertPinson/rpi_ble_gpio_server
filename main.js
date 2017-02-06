@@ -4,7 +4,7 @@ var log = require('winston');
 
 // ---------------------------------------------------------------------------------------------------------
 
-DEVICE_NAME = 'RPI-BLE-BLINK';
+DEVICE_NAME = 'LED BLINK';
 TX_POWER = -25;
 LOG_LEVEL = 'debug';
 FLIPFLOP_TIME = 3000;
