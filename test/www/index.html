@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <!--
@@ -20,28 +20,74 @@ Note: On some browser versions and platform you may get a message "GATT operatio
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
 
     <link rel="stylesheet" href="resources/mdl/material.indego-pink.min.css" />
+    <link rel="stylesheet" href="resources/icomoon/style.css" />
     <script src="resources/mdl/material.min.js"></script>
-
+  
     <title>Raspberry Pi - Blink Simple</title>
+    <style>
+        body {
+            background-color: #3c454f;
+            color: #ffffff;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .light-bulb {
+            font-size: 400px;
+        }
+        
+        .bulb-container {
+            transition: color 0.5s ease;
+            height: 40%;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .bulb-on {
+            color: darkorange;
+        }
+        
+        .connection-container {
+            margin: 20px;
+        }
+        
+        .debug-show-button {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ababab;
+            margin-top: 50px;
+        }
+
+        #debugContainer{
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div>
+    <div class="connection-container">
         <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
               <input type="checkbox" id="switch-1" onchange="onConnectChanged(this)" class="mdl-switch__input">
-            <span class="mdl-switch__label">Connect</span>
+            <span id="connectionLabel" class="mdl-switch__label">Connect</span>
         </label>
+        <label id="connectionStatus"></label>
         <!--<button id="connectButton" onclick="setupBluetooth()">Connect</button>-->
     </div>
     <br/>
-    <div>
-        <button id="onButton" onclick="ledOnPressed()">LED On</button>
+    <div class="bulb-container" onclick="bulbOnPressed(this)">
+        <span aria-hidden="true" class="icon-bulb light-bulb bulb-off"></span>
     </div>
+    <div class="debug-show-button" onclick="debugShowPressed()"></div>
+
     <br/>
-    <div>
-        <button id="offButton" onclick="ledOffPressed()">LED Off</button>
+
+    <!-- In browser console output for debugging, Caveman Debugging! -->
+    <div id="debugContainer">
+        <h3>Debug output:</h3>
+        <textarea cols="80" rows="16" id="consoleTextArea"></textarea>
     </div>
-    <br/>
 
     <script>
         // These 128-Bit ID's are for a custom Raspberry{Pi GPIO BLE Profile
@@ -72,9 +118,47 @@ Note: On some browser versions and platform you may get a message "GATT operatio
             log("ERROR:" + error);
         }
 
+        function debugShowPressed(){
+            console.log("debug show pressed");
+            var debugContainer = document.getElementById("debugContainer");
+             if (debugContainer.style.display !== 'none') {
+                debugContainer.style.display = 'none';
+            }
+            else {
+                debugContainer.style.display = 'block';
+            }         
+        }
+
+        function bulbOnPressed(bulbContainer) {
+            if (!bluetoothDevice) {
+                return;
+            }
+
+            if (!bluetoothDevice.gatt.connected){return;}
+
+            if (bulbContainer.classList.contains("bulb-on"))
+            {
+                bulbContainer.classList.remove("bulb-on");
+                ledOffPressed();
+            }
+            else{
+                bulbContainer.classList.add("bulb-on");
+                ledOnPressed();              
+            }
+        }
+
+        function updateConnectionStatus(data){
+            document.getElementById("connectionStatus").textContent=data;          
+        }
+
+        function updateConnectionLabel(data){
+            document.getElementById("connectionLabel").textContent=data;          
+        }
+
         function setupBluetooth() {
             if (navigator.bluetooth == undefined) {
                 log('ERROR: Web Bluetooth support not found, please see: https://goo.gl/5p4zNM');
+                updateConnectionStatus("Web Bluetooth support not found");
                 return;
             }
 
@@ -92,6 +176,7 @@ Note: On some browser versions and platform you may get a message "GATT operatio
                         .then(function(device) {
                             log('> DeviceNAme=' + device.name);
                             log('Connecting to GATT Server...');
+                            updateConnectionStatus("Connecting to GATT Server...");
                             bluetoothDevice = device;
                             return device.gatt.connect(); // This is deprectated, but still necessary in some 'older' browser versions.
                         }).then(function(server) {
@@ -109,7 +194,9 @@ Note: On some browser versions and platform you may get a message "GATT operatio
                             connected = true;
                             log('> Found PinState characteristic');
                             pinStateCharacteristic = characteristic;
-
+                            
+                            updateConnectionStatus("Connected");
+                            updateConnectionLabel("Press to disconnect");
                             deviceReady();
 
                             // Listen to device notifications
@@ -130,7 +217,6 @@ Note: On some browser versions and platform you may get a message "GATT operatio
                 }
             }
         }
-
 
         function send(data) {
             log("Sending: " + data);
@@ -172,17 +258,15 @@ Note: On some browser versions and platform you may get a message "GATT operatio
             log('Disconnecting from Bluetooth Device...');
             if (bluetoothDevice.gatt.connected) {
                 bluetoothDevice.gatt.disconnect();
+                pinStateCharacteristic = null;
+                 updateConnectionLabel("Press to connect");
+                 updateConnectionStatus("Disconnected");
             } else {
                 log('> Bluetooth Device is already disconnected');
             }
         }
     </script>
 
-    <!-- In browser console output for debugging, Caveman Debugging! -->
-    <div class="hidden">
-        <h3>Debug output:</h3>
-        <textarea cols="80" rows="16" id="consoleTextArea"></textarea>
-    </div>
     <script>
         function log(line) {
             console.log(line);
@@ -190,7 +274,6 @@ Note: On some browser versions and platform you may get a message "GATT operatio
             previous_text = textarea.innerHTML;
             textarea.innerHTML = previous_text + line + "\n";
             textarea.scrollTop = textarea.scrollHeight;
-
         }
     </script>
 </body>
