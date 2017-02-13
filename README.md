@@ -41,7 +41,7 @@ Note: Be aware that the server is only available on one adapter at a time.
 
 # Wiring:
 
-LED to 27 and GND
+LED to 23 and GND
 
 
 # Testing
@@ -65,16 +65,10 @@ Raw Testing usng LightBlue:
 0031021b01
 0031021b00
 
-
-## Web Bluetooth Browser Demo:
-
-Scroll down to the RasperryPi Demo on https://www.thebubbleworks.com/
-
-
 # Example output 
 
 ```
-pi@raspberrypi:~/TheBubbleWorks_RaspberryPi_BLE_GPIO_Server $ npm start 
+pi@raspberrypi:~/BLE_GPIO_Server $sudo npm start 
 hci0:	Type: BR/EDR  Bus: UART
 	BD Address: B8:27:EB:0A:F7:8E  ACL MTU: 1021:8  SCO MTU: 64:1
 	UP
@@ -99,8 +93,3 @@ Set pin state pin = 27 State = 0
 ```
 
 ---
-
-#  LIve Demo
-
-
-Open a demo in a Web Bluetooth enabled browser [here](https://www.thebubbleworks.com/TheBubbleWorks_RaspberryPi_BLE_GPIO_Server/test/www/).

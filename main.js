@@ -4,7 +4,7 @@ var log = require('winston');
 
 // ---------------------------------------------------------------------------------------------------------
 
-DEVICE_NAME = 'LED BLINK';
+DEVICE_NAME = 'RPI-BLE-BLINK';
 TX_POWER = -25;
 LOG_LEVEL = 'debug';
 FLIPFLOP_TIME = 3000;
@@ -30,8 +30,6 @@ LED_PIN     = 23;
 */
 // ---------------------------------------------------------------------------------------------------------
 // Eddystone / GATT FLip flop
-
-//TEST my change
 
 var BEACON_ADV_STATE = 0;
 var GATT_ADV_STATE = 1;
